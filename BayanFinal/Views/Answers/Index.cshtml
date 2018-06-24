@@ -1,0 +1,46 @@
+﻿@model List<BayanFinal.Models.AnswerVM>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/Questions/Index">Questions And Answer</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/User/Logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <h2>Add Answer</h2>
+
+    <input id="answer" type="text" name="Add Answer">
+    <button id="btn2" class="btn btn-danger" type="button">Add</button>
+</div>
+<div class="container">
+    <h2>The Answers</h2>
+    <div class="list-group qqqq">
+        
+        @foreach (var item in Model)
+        {
+            <div class="list-group-item active">@item.AnswerDetails</div><br>
+        }
+    </div>
+</div>
+
+@section scripts{
+<script>
+    $("#btn2").click(function () {
+
+        $.post("/Answers/AddAnswers/",
+        {
+            Question_ID: "@ViewBag.QuestionID",
+            Answer: $("#answer").val(),
+        },
+        function (data, status) {
+            $('.qqqq').append("<a class='list-group-item active' href='/Answers/Index/' " + data + ">" + $("#answer").val() + "</a><br>")
+            $("#answer").val("");
+
+            // alert("Data: " + data + "\nStatus: " + status);
+        });
+    });
+</script>
+    }

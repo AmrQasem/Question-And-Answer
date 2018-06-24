@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BayanTestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Answer">
+    <Key>
+      <PropertyRef Name="AnswerID" />
+    </Key>
+    <Property Name="AnswerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AnswerDetails" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="QuestionID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Question" Relationship="Self.FK_QuestionsAnswers" FromRole="Answers" ToRole="Questions" />
+  </EntityType>
+  <EntityType Name="Question">
+    <Key>
+      <PropertyRef Name="QuestionID" />
+    </Key>
+    <Property Name="QuestionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="QuestionTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Answers" Relationship="Self.FK_QuestionsAnswers" FromRole="Questions" ToRole="Answers" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK_QuestionsAnswers">
+    <End Role="Questions" Type="Self.Question" Multiplicity="1" />
+    <End Role="Answers" Type="Self.Answer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Questions">
+        <PropertyRef Name="QuestionID" />
+      </Principal>
+      <Dependent Role="Answers">
+        <PropertyRef Name="QuestionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BayanTestEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Answers" EntityType="Self.Answer" />
+    <EntitySet Name="Questions" EntityType="Self.Question" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_QuestionsAnswers" Association="Self.FK_QuestionsAnswers">
+      <End Role="Questions" EntitySet="Questions" />
+      <End Role="Answers" EntitySet="Answers" />
+    </AssociationSet>
+    <FunctionImport Name="GetAllAnswers" ReturnType="Collection(BayanTestModel.GetAllAnswers_Result)" />
+    <FunctionImport Name="GetAllQuestions" ReturnType="Collection(BayanTestModel.GetAllQuestions_Result)" />
+    <FunctionImport Name="GetAnswers" ReturnType="Collection(BayanTestModel.GetAnswers_Result)">
+      <Parameter Name="QuestionID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="UserLogin" ReturnType="Collection(BayanTestModel.UserLogin_Result)">
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="Password" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="GetAllAnswers_Result">
+    <Property Type="Int32" Name="AnswerID" Nullable="false" />
+    <Property Type="String" Name="AnswerDetails" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="QuestionID" Nullable="false" />
+    <Property Type="String" Name="QuestionTitle" Nullable="true" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="GetAllQuestions_Result">
+    <Property Type="Int32" Name="QuestionID" Nullable="false" />
+    <Property Type="String" Name="QuestionTitle" Nullable="true" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="GetAnswers_Result">
+    <Property Type="Int32" Name="AnswerID" Nullable="false" />
+    <Property Type="String" Name="AnswerDetails" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="QuestionID" Nullable="false" />
+    <Property Type="String" Name="QuestionTitle" Nullable="true" MaxLength="100" />
+  </ComplexType>
+  <ComplexType Name="UserLogin_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="UserName" Nullable="true" MaxLength="100" />
+  </ComplexType>
+</Schema>
